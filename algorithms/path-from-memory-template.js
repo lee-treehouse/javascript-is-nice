@@ -62,8 +62,57 @@ const isCellBlockedOrOutOfBounds = (coord) => {
 };
 
 const bfs = (startCoord, endCoord) => {
-  const pathTravelled = [];
-  return pathTravelled;
+  const queue = [startCoord];
+  let visited = new Set();
+
+  let parents = {};
+
+  while (queue.length) {
+    const current = queue.shift();
+    if (!visited.has(current.toString())) {
+      visited.add(current.toString());
+
+      if (current[0] === endCoord[0] && current[1] === endCoord[1]) {
+        /*
+        console.log("Eureka, target cell found");
+
+         console.log(
+          `I am at ${current} and I got here from ${
+            parents[current.toString()]
+          }`
+        );
+
+         console.log(parents);
+*/
+
+        let pathTravelled = [current];
+        let item = parents[current.toString()];
+        // put it at the start of the array so you don't need to reverse it later
+        pathTravelled.unshift(item);
+
+        while (item) {
+          item = parents[item.toString()];
+          if (item) pathTravelled.unshift(item);
+        }
+
+        console.log();
+        console.log("path travelled:");
+        console.log(pathTravelled);
+
+        return;
+      }
+
+      const possibleNeighbours = getNeighbours(current);
+      possibleNeighbours.forEach((neighbour) => {
+        if (!visited.has(neighbour.toString())) {
+          parents[neighbour.toString()] = current;
+          queue.push(neighbour);
+        }
+      });
+    }
+  }
+
+  return [];
 };
 
 console.log(bfs([1, 1], [4, 3]));
