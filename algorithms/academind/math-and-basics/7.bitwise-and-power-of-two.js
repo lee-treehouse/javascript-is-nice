@@ -148,6 +148,8 @@ function run() {
 run();
 
 function isPowerOfTwo(n) {
+  // negative numbers would be handled differently
+
   const result = n & (n - 1);
   return result === 0;
 }
