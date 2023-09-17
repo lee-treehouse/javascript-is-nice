@@ -31,15 +31,27 @@ const factorial = (n, currentTotal) => {
   // throw on negative numbers
 
   let subtotal = currentTotal ?? 1;
+  console.log({ subtotal });
 
   if (n === 1) return subtotal;
 
   return factorial(n - 1, subtotal * n);
 };
 
+const factorial_from_tutorial = (number) => {
+  if (number === 1) return 1;
+
+  const subtotal = number * factorial_from_tutorial(number - 1);
+  return subtotal;
+};
+
 test(factorial(6), 720);
 test(factorial(7), 720 * 7);
 test(factorial(3), 6);
+
+// test(factorial_from_tutorial(6), 720);
+// test(factorial_from_tutorial(7), 720 * 7);
+// test(factorial_from_tutorial(3), 6);
 
 // this is my guess from the prompt. time complexity would be O(n) linear time as for each n we loop
 
