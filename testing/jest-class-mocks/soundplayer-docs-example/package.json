@@ -1,0 +1,12 @@
+{
+  "name": "soundplayer-docs-example",
+  "version": "1.0.0",
+  "description": "example from here https://jestjs.io/docs/es6-class-mocks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
