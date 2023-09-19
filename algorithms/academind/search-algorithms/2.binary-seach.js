@@ -8,27 +8,25 @@ function test(expected, actual) {
     console.log(`actual:`);
     console.log(actual.toString());
   }
-  console.log();
 }
 
 function findElementIndex(sortedArray, itemToFind) {
   let startIndex = 0;
   let endIndex = sortedArray.length - 1;
 
-  while (true) {
+  while (endIndex >= startIndex) {
     const midPoint = Math.floor((endIndex - startIndex) / 2) + startIndex;
     const midPointItem = sortedArray[midPoint];
 
-    if (midPointItem === itemToFind) {
-      return midPoint;
+    if (midPointItem === itemToFind) return midPoint;
+
+    if (midPointItem > itemToFind) {
+      endIndex = midPoint - 1;
     } else {
-      if (endIndex === startIndex) return -1;
+      startIndex = midPoint + 1;
     }
-
-    if (midPointItem > itemToFind) endIndex = midPoint - 1;
-
-    if (midPointItem < itemToFind) startIndex = midPoint + 1;
   }
+  return -1;
 }
 test(0, findElementIndex([1, 5, 8, 11, 17, 20, 21, 89], 1));
 test(1, findElementIndex([1, 5, 8, 11, 17, 20, 21, 89], 5));
