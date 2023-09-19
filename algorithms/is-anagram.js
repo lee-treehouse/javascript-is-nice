@@ -9,14 +9,13 @@ function test(expected, actual) {
   }
 }
 
-function isAnagram(string1, string2) {
-  if (!string1 || !string2)
-    throw new Error("string 1 and string 2 must be specified");
+function isAnagram(s, t) {
+  if (!s || !t) throw new Error("string 1 and string 2 must be specified");
 
-  if (string1.length !== string2.length) return false;
+  if (s.length !== t.length) return false;
 
   let string1CharCount = {};
-  [...string1].forEach((element) => {
+  [...s].forEach((element) => {
     if (string1CharCount[element]) {
       string1CharCount[element]++;
     } else {
@@ -25,7 +24,7 @@ function isAnagram(string1, string2) {
   });
 
   let string2CharCount = {};
-  [...string2].forEach((element) => {
+  [...t].forEach((element) => {
     if (string2CharCount[element]) {
       string2CharCount[element]++;
     } else {
