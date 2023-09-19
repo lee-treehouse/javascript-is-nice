@@ -11,7 +11,7 @@ This question is asked by Google. Given an array of integers, return whether or 
 */
 
 function test(expected, actual) {
-  if (expected === actual) {
+  if (expected === actual || expected.toString() === actual.toString()) {
     console.log("PASS");
   } else {
     console.log(`FAIL: EXPECTED: ${expected} ACTUAL: ${actual}`);
@@ -21,7 +21,7 @@ function test(expected, actual) {
 // example
 1, 3, 8, 2, 10;
 
-function twoSum(nums, k) {
+function twoSumOld(nums, k) {
   let compliments = new Set();
   for (const num of nums) {
     // questions - have I dealt with summing a number and itself
@@ -39,8 +39,43 @@ function twoSum(nums, k) {
   return false;
 }
 
-test(true, twoSum([6, 4], 10));
-test(true, twoSum([5, 5, 3], 10));
-test(true, twoSum([1, 3, 8, 2], 10));
-test(false, twoSum([3, 9, 13, 7], 8));
-test(true, twoSum([4, 2, 6, 5, 2], 4));
+//test(true, twoSumOld([6, 4], 10));
+//test(true, twoSumOld([5, 5, 3], 10));
+//test(true, twoSumOld([1, 3, 8, 2], 10));
+//est(false, twoSumOld([3, 9, 13, 7], 8));
+//test(true, twoSumOld([4, 2, 6, 5, 2], 4));
+
+// leetcode version
+
+/*
+Given an array of integers nums and an integer target, return indices of the two numbers such 
+that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same 
+element twice.
+
+You can return the answer in any order.
+*/
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function (nums, target) {
+  let complimentAndIndex = {};
+
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i];
+
+    if (complimentAndIndex[num] !== undefined)
+      return [complimentAndIndex[num], i];
+
+    const compliment = target - num;
+    complimentAndIndex[compliment] = i;
+  }
+  return [];
+};
+
+test([2, 3], twoSum([1, 3, 8, 2], 10));
+test([0, 1], twoSum([2, 7, 11, 15], 9));
