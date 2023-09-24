@@ -1,0 +1,5 @@
+/*
+
+remembering quick sort and choosing the pivot element as our first item
+
+*/
