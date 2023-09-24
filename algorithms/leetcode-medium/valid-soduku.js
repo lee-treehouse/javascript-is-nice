@@ -1,13 +1,36 @@
 // Determine if a 9 x 9 Sudoku board is valid.
 
-let validateCounter = 0;
-const validateSet = (set) => {
-  validateCounter++;
-  console.log(set);
-  //console.log("I should have 1 sets of 9 items.. do I?");
-  if (set && set.length === 9) {
-    //console.log("YES");
+const isValidSet = (set) => {
+  let seen = new Set();
+  for (let i = 0; i < 9; i++) {
+    const value = set[i];
+
+    if (!value) return false;
+    if (value === ".") continue;
+
+    if (!isValidValue(value)) {
+      return false;
+    }
+
+    if (seen.has(value)) {
+      return false;
+    }
+
+    seen.add(value);
   }
+  return true;
+};
+
+const isValidValue = (value) => {
+  const numberValue = parseInt(value, 10);
+
+  if (isNaN(numberValue)) return false;
+
+  // possibly easier just to check is in
+  //[".","1","2"] etc
+
+  const result = numberValue >= 0 && numberValue <= 9;
+  return result;
 };
 
 /**
@@ -18,6 +41,20 @@ var isValidSudoku = function (board) {
   // there should be 27 sets of 9 values to validate
   // validate the rows
   // ß
+
+  // validate the rows
+  for (let rowIndex = 0; rowIndex < 9; rowIndex++) {
+    if (!isValidSet(board[rowIndex])) return false;
+  }
+
+  // validate the columns
+  for (let colIndex = 0; colIndex < 9; colIndex++) {
+    const columnValues = [];
+    for (let rowIndex = 0; rowIndex < 9; rowIndex++) {
+      columnValues.push(board[rowIndex][colIndex]);
+    }
+    if (!isValidSet(columnValues)) return false;
+  }
 
   // validate the blocks
   // you want
@@ -32,9 +69,11 @@ var isValidSudoku = function (board) {
           blockValues.push(board[blockRowIndex][blockColIndex]);
         }
       }
-      validateSet(blockValues);
+      if (!isValidSet(blockValues)) return false;
     }
   }
+
+  return true;
 };
 
 const valid = [
@@ -49,9 +88,7 @@ const valid = [
   [".", ".", ".", ".", "8", ".", ".", "7", "9"],
 ];
 
-isValidSudoku(valid);
-
-console.log(validateCounter);
+console.log(isValidSudoku(valid));
 
 const invalid = [
   ["8", "3", ".", ".", "7", ".", ".", ".", "."],
@@ -64,3 +101,5 @@ const invalid = [
   [".", ".", ".", "4", "1", "9", ".", ".", "5"],
   [".", ".", ".", ".", "8", ".", ".", "7", "9"],
 ];
+
+console.log(isValidSudoku(invalid));
