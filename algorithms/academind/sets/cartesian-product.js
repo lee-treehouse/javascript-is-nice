@@ -61,3 +61,6 @@ console.dir(
   cartProductX(["M", "L"], ["Blue", "Red"], ["round neck", "square neck"]),
   { depth: null }
 );
+
+// now we are saying time complexity is O(n^x) where n is the array length and x is the number of arrays
+// eg if array length is 5 and there are 4 arrays the number of combinatinos will be O(5*5*5*5) = 625
