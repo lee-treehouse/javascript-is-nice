@@ -98,6 +98,8 @@ class Grid {
 
     this.obstacles.push([9, 5]);
     this.obstacles.push([9, 6]);
+
+    this.obstacles.push([14, 9]);
   }
 
   transformVisitedSetToVisitedArray(visited) {
