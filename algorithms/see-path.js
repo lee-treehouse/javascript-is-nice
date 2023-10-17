@@ -99,7 +99,7 @@ class PathVisualiser {
 
   generateTables() {
     this.seekTable = this.generateTableAndLabel("Search space");
-    this.pathTable = this.generateTableAndLabel("Path");
+    this.pathTable = this.generateTableAndLabel("Path after backtracking");
   }
 
   addVisitedAndPath(path) {
