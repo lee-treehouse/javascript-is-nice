@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>See Path</title>
+    <script src="grid.js"></script>
+    <script src="see-path.js"></script>
+    <style type="text/css">
+      table {
+        margin-bottom: 1em;
+      }
+
+      th,
+      td {
+        padding: 8px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+
+      td.obstacle {
+        background: lightsteelblue;
+      }
+
+      .label {
+        color: grey;
+      }
+
+      .counter {
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+    <script>
+      let grid;
+      let pathVisualiser;
+
+      function doThis() {
+        //console.log(document.searsearchType)
+        const searchType = document.querySelector(
+          'input[name="searchType"]:checked'
+        ).value;
+
+        const startCoordX = parseInt(
+          document.querySelector("#startingCellX").value
+        );
+        const startCoordY = parseInt(
+          document.querySelector("#startingCellY").value
+        );
+        const endCoordX = parseInt(
+          document.querySelector("#destinationCellX").value
+        );
+        const endCoordY = parseInt(
+          document.querySelector("#destinationCellY").value
+        );
+
+        localStorage.setItem("startCoordX", startCoordX);
+        localStorage.setItem("startCoordY", startCoordY);
+        localStorage.setItem("endCoordX", endCoordX);
+        localStorage.setItem("endCoordY", endCoordY);
+
+        const startCoord = [startCoordX, startCoordY];
+        const endCoord = [endCoordX, endCoordY];
+
+        let result;
+        if (searchType === "bfs")
+          result = grid.getVisitedAndPathBFS(startCoord, endCoord);
+        if (searchType === "dfs")
+          result = grid.getVisitedAndPathDFS(startCoord, endCoord);
+
+        pathVisualiser.addVisitedAndPath(result);
+      }
+
+      function presetFormFields() {
+        const startCoordX = localStorage.getItem("startCoordX");
+        if (startCoordX) {
+          document.querySelector("#startingCellX").value = startCoordX;
+        }
+
+        const endCoordX = localStorage.getItem("endCoordX");
+        if (endCoordX) {
+          document.querySelector("#destinationCellX").value = endCoordX;
+        }
+
+        const startCoordY = localStorage.getItem("startCoordY");
+        if (startCoordY) {
+          document.querySelector("#startingCellY").value = startCoordY;
+        }
+
+        const endCoordY = localStorage.getItem("endCoordY");
+        if (endCoordY) {
+          document.querySelector("#destinationCellY").value = endCoordY;
+        }
+      }
+
+      function generateTables() {
+        grid = new Grid();
+
+        pathVisualiser = new PathVisualiser(grid);
+        pathVisualiser.generateTables();
+      }
+    </script>
+  </head>
+  <body onload="presetFormFields(); generateTables()">
+    <h3>Starting Cell</h3>
+    <div>
+      <label for="startingCellX">X</label>
+
+      <input type="text" id="startingCellX" value="1" />
+    </div>
+
+    <div>
+      <label for="startingCellY">Y</label>
+      <input type="text" id="startingCellY" value="1" />
+    </div>
+
+    <h3>Destination Cell</h3>
+    <div>
+      <label for="destinationCellX">X</label>
+      <input type="text" id="destinationCellX" value="4" />
+    </div>
+
+    <div>
+      <label for="destinationCellY">Y</label>
+      <input type="text" id="destinationCellY" value="3" />
+    </div>
+
+    <h3>Search Type</h3>
+    <div>
+      <input type="radio" id="bfs" name="searchType" value="bfs" checked />
+      <label for="bfs">BFS</label>
+    </div>
+
+    <div>
+      <input type="radio" id="dfs" name="searchType" value="dfs" />
+      <label for="dfs">DFS</label>
+    </div>
+
+    <input type="button" value="Add path to table" onclick="doThis()" />
+  </body>
+</html>
