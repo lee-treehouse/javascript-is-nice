@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>See Path</title>
+
+    <script src="GridSettingsFactory.js"></script>
+    <script src="grid.js"></script>
+    <script src="get-form-settings.js"></script>
+    <script src="prefill-form.js"></script>
+    <script src="persist-form-settings.js"></script>
+    <script src="see-path.js"></script>
+    <style type="text/css">
+      table {
+        margin-bottom: 1em;
+      }
+
+      th,
+      td {
+        padding: 4px;
+        height: 25px;
+        width: 25px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        font-size: 0.8rem;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: background-color 1s;
+      }
+
+      td.obstacle {
+        background: #333333;
+      }
+
+      td.obstacle .label {
+        color: white;
+      }
+
+      .label {
+        color: grey;
+      }
+
+      .counter {
+        color: black;
+        font-weight: bold;
+      }
+
+      .box {
+        border-style: solid;
+        border-width: 1px;
+        display: block;
+        width: 100px;
+        height: 100px;
+        background-color: lightblue;
+        /* transition: width 2s, height 2s, background-color 2s, rotate 2s;*/
+        transition: background-color 1s;
+      }
+
+      .box.clicked {
+        background-color: lightseagreen;
+      }
+
+      td.clicked {
+        background-color: lightsteelblue;
+      }
+
+      .box:hover {
+        background-color: #ffcccc;
+        /*
+        width: 200px;
+        height: 200px;
+        rotate: 180deg;
+ */
+      }
+
+      .pickCell div {
+        margin-right: 10px;
+      }
+
+      .pickCell div input {
+        width: 25px;
+      }
+    </style>
+    <script>
+      let grid;
+      let visualiser;
+
+      function getTable() {
+        const table = document.querySelector("#grid").children[0];
+        return table;
+      }
+
+      function clearGrid() {
+        const table = getTable();
+        visualiser.clearGrid(table, false);
+      }
+
+      function displayGrid() {
+        const settingsName = getGridSettingsName();
+        saveGridSettingsName(settingsName);
+
+        const settings = getGridSettings(settingsName);
+        grid = new Grid(
+          settings.MAX_BOARD_X_COORD,
+          settings.MAX_BOARD_Y_COORD,
+          settings.obstacles
+        );
+
+        visualiser = new PathVisualiser(grid);
+        const gridTable = document.querySelector("#grid");
+
+        gridTable.replaceChildren(visualiser.getTableRepresentation());
+      }
+
+      function search(displayVisitedOrder, displayVisitedAnimation) {
+        const table = getTable();
+
+        const coords = getSearchCoordinates();
+
+        saveSearchCoordinates(coords);
+
+        const animationSpeed = getAnimationSpeed();
+        saveAnimationSpeed(animationSpeed);
+
+        const searchType = getSearchStrategy();
+
+        let result;
+        if (searchType === "bfs")
+          result = grid.getVisitedAndPathBFS(
+            [coords.start.x, coords.start.y],
+            [coords.end.x, coords.end.y]
+          );
+        if (searchType === "dfs")
+          result = grid.getVisitedAndPathDFS(
+            [coords.start.x, coords.start.y],
+            [coords.end.x, coords.end.y]
+          );
+
+        if (displayVisitedOrder) {
+          visualiser.displayPathLabels(table, result.visited, animationSpeed);
+        }
+
+        if (displayVisitedAnimation) {
+          visualiser.animatePath(table, result.visited, animationSpeed);
+        }
+      }
+    </script>
+  </head>
+  <body onload="presetFormFields(); displayGrid()">
+    <h2>Grid</h2>
+
+    <select name="grid-strategy" id="grid-strategy-select">
+      <option value="default">default</option>
+      <option value="medium">medium</option>
+      <option value="johnsongnow-maze">John Song Now Maze</option>
+    </select>
+
+    <input type="button" value="Display Grid" onclick="displayGrid()" />
+
+    <div id="grid"></div>
+
+    <h2>Cell Labels</h2>
+
+    <select name="cell-label-setting" id="cell-label-setting-select">
+      <option value="on">ON</option>
+      <option value="off">OFF</option>
+    </select>
+
+    <h2>Apply Search Strategy</h2>
+
+    <div style="display: flex" class="pickCell">
+      <div>Starting Cell</div>
+      <div>
+        <label for="startingCellX">X</label>
+        <input type="text" id="startingCellX" value="1" />
+      </div>
+      <div>
+        <label for="startingCellY">Y</label>
+        <input type="text" id="startingCellY" value="1" />
+      </div>
+    </div>
+
+    <div style="display: flex" class="pickCell">
+      <div>Destination Cell</div>
+      <div>
+        <label for="destinationCellX">X</label>
+        <input type="text" id="destinationCellX" value="4" />
+      </div>
+      <div>
+        <label for="destinationCellY">Y</label>
+        <input type="text" id="destinationCellY" value="3" />
+      </div>
+    </div>
+
+    <h3>Search Type</h3>
+    <div>
+      <input type="radio" id="bfs" name="searchType" value="bfs" checked />
+      <label for="bfs">BFS</label>
+    </div>
+
+    <div>
+      <input type="radio" id="dfs" name="searchType" value="dfs" />
+      <label for="dfs">DFS</label>
+    </div>
+
+    <h2>Animation speed</h2>
+    <input type="text" id="animationSpeed" value="200" />
+
+    <div style="display: flex" id="displayOptions">
+      <div>
+        <input type="button" value="Clear Grid" onclick="clearGrid()" />
+      </div>
+      <div>
+        <input
+          type="button"
+          value="Display Search"
+          onclick="search(true, false)"
+        />
+      </div>
+      <div>
+        <input
+          type="button"
+          value="Display Search Animation"
+          onclick="search(false, true)"
+        />
+      </div>
+    </div>
+  </body>
+</html>
