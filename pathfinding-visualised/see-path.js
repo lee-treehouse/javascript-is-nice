@@ -2,6 +2,7 @@ class PathVisualiser {
   seekTable;
   pathTable;
   grid;
+  marco = "polo";
 
   constructor(grid) {
     this.grid = grid;
@@ -51,6 +52,9 @@ class PathVisualiser {
 
       const cell = table.rows[rowIndex].cells[cellIndex];
 
+      console.log("here is this in applypathactiontotable");
+      console.log(this);
+
       action(cell, counter, payload);
     });
   }
@@ -90,6 +94,8 @@ class PathVisualiser {
   }
 
   addAnimationToCell(cell, counter, payload) {
+    console.log(this);
+
     const time = payload.speed * counter;
 
     setTimeout(() => {
@@ -115,7 +121,15 @@ class PathVisualiser {
 
   animatePath(table, path, speed) {
     const payload = { speed };
-    this.applyPathActionToTable(table, path, this.addAnimationToCell, payload);
+
+    // ok we have a binding problem.
+
+    this.applyPathActionToTable(
+      table,
+      path,
+      this.addAnimationToCell.bind(this),
+      payload
+    );
   }
 
   displayPathLabels(table, path) {
