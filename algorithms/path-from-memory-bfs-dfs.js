@@ -63,6 +63,11 @@ const isCellBlockedOrOutOfBounds = (coord) => {
 
 // this isn't actually returning the path right now
 const getPathDFS = (startCoord, endCoord) => {
+  if (!startCoord || !endCoord) {
+    console.log("missing coordinates");
+    return;
+  }
+
   let visited = new Set();
 
   let stack = [startCoord];
@@ -182,4 +187,4 @@ const getPath = (startCoord, endCoord) => {
   // return getPathBFS(startCoord, endCoord);
 };
 
-console.log(getPath([1, 1], [4, 3]));
+//console.log(getPath([1, 1], [4, 3]));
