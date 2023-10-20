@@ -1,14 +1,3 @@
-function getCellLabelSetting() {
-  const cellLabelSettings = document.querySelector(
-    "#cell-label-setting-select"
-  ).selectedOptions;
-
-  if (!cellLabelSettings || cellLabelSettings.length === 0)
-    throw new Error("No cell label setting selected");
-
-  return cellLabelSettings[0].value;
-}
-
 function getGridSettingsName() {
   const gridStrategies = document.querySelector(
     "#grid-strategy-select"
@@ -21,7 +10,14 @@ function getGridSettingsName() {
 }
 
 function getSearchStrategy() {
-  return document.querySelector('input[name="searchType"]:checked').value;
+  const searchTypes = document.querySelector(
+    "#search-type-select"
+  ).selectedOptions;
+
+  if (!searchTypes || searchTypes.length === 0)
+    throw new Error("No search types selected");
+
+  return searchTypes[0].value;
 }
 
 function getSearchCoordinates() {

@@ -4,6 +4,16 @@ class PathVisualiser {
   grid;
   marco = "polo";
 
+  CSS_CLASS_VISITED = "visited";
+  CSS_CLASS_BACKTRACKED = "backtracked";
+  CSS_CLASS_QUEUED = "queued";
+
+  animationCSSClasses = [
+    this.CSS_CLASS_VISITED,
+    this.CSS_CLASS_BACKTRACKED,
+    this.CSS_CLASS_QUEUED,
+  ];
+
   constructor(grid) {
     this.grid = grid;
   }
@@ -76,6 +86,9 @@ class PathVisualiser {
         if (!cell) {
           throw new Error("cell not found");
         }
+        //payload.gridReference = `poo`;
+
+        payload.gridReference = `[${cellIndex}, ${numRows - rowIndex + 1}]`;
         action(cell, payload);
       }
     }
@@ -88,39 +101,55 @@ class PathVisualiser {
   }
 
   removeAnimationFromCell(cell) {
-    if (cell.classList.contains("clicked")) {
-      cell.classList.remove("clicked");
-    }
+    this.animationCSSClasses.forEach((className) => {
+      console.log(`removing ${className}`);
+
+      if (cell.classList.contains(className)) {
+        cell.classList.remove(className);
+      }
+    });
   }
 
   addAnimationToCell(cell, counter, payload) {
-    console.log(this);
-
     const time = payload.speed * counter;
+    const className = payload.className;
+
+    if (!time || !className) {
+      throw new Error("payload must include speed and className");
+    }
 
     setTimeout(() => {
-      cell.classList.toggle("clicked");
+      cell.classList.toggle(className);
     }, time);
   }
 
-  addLabelToCell(cell, label, payload = {}) {
+  addGridReferenceLabelToCell(cell, payload = {}) {
     // TODO add a dom child
     const span = document.createElement("span");
-    span.innerText = ` (${label})`;
+    span.innerText = ` (${payload.gridReference})`;
     span.classList.add("label");
     cell.appendChild(span);
   }
 
+  // addLabelToCell(cell, label, payload = {}) {
+  //   // TODO add a dom child
+  //   const span = document.createElement("span");
+  //   span.innerText = ` (${label})`;
+  //   span.classList.add("label");
+  //   cell.appendChild(span);
+  // }
+
   addCounterToCell(cell, counter) {
     // TODO add a dom child
+    // this is the same as ad label to cell except for the class, why is it duplicated?
     const span = document.createElement("span");
     span.innerText = ` (${counter})`;
     span.classList.add("counter");
     cell.appendChild(span);
   }
 
-  animatePath(table, path, speed) {
-    const payload = { speed };
+  animatePath(table, path, speed, className) {
+    const payload = { speed, className };
 
     // ok we have a binding problem.
 
@@ -130,6 +159,18 @@ class PathVisualiser {
       this.addAnimationToCell.bind(this),
       payload
     );
+  }
+
+  animateVisited(table, path, speed) {
+    this.animatePath(table, path, speed, this.CSS_CLASS_VISITED);
+  }
+
+  animateQueued(table, path, speed) {
+    this.animatePath(table, path, speed, this.CSS_CLASS_QUEUED);
+  }
+
+  animateBacktracked(table, path, speed) {
+    this.animatePath(table, path, speed, this.CSS_CLASS_BACKTRACKED);
   }
 
   displayPathLabels(table, path) {
@@ -168,10 +209,16 @@ class PathVisualiser {
     return tbl;
   }
 
-  clearGrid(table, showLabels) {
-    this.applyActionToAllTableCells(table, this.removeAnimationFromCell);
-    this.applyActionToAllTableCells(table, this.removeChildren);
+  turnOnGridLabels(table, showLabels) {
+    this.applyActionToAllTableCells(table, this.addGridReferenceLabelToCell);
+  }
 
+  clearGrid(table, showLabels) {
+    this.applyActionToAllTableCells(
+      table,
+      this.removeAnimationFromCell.bind(this)
+    );
+    this.applyActionToAllTableCells(table, this.removeChildren);
     if (showLabels) {
     }
   }

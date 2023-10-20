@@ -1,9 +1,9 @@
-function saveCellLabelSetting(cellLabelSetting) {
-  localStorage.setItem("cellLabelSetting", cellLabelSetting);
-}
-
 function saveAnimationSpeed(speed) {
   localStorage.setItem("animationSpeed", speed);
+}
+
+function saveSearchType(searchType) {
+  localStorage.setItem("searchType", searchType);
 }
 
 function saveGridSettingsName(gridStrategy) {

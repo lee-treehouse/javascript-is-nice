@@ -19,8 +19,8 @@
       th,
       td {
         padding: 4px;
-        height: 25px;
-        width: 25px;
+        height: 35px;
+        width: 35px;
       }
 
       table,
@@ -60,24 +60,29 @@
         transition: background-color 1s;
       }
 
-      .box.clicked {
-        background-color: lightseagreen;
+      td.visited {
+        background-color: lightsteelblue;
       }
 
-      td.clicked {
-        background-color: lightsteelblue;
+      td.backtracked {
+        background-color: lightpink;
+      }
+
+      td.visited.backtracked {
+        background-color: lightsalmon;
       }
 
       .box:hover {
         background-color: #ffcccc;
         /*
-        width: 200px;
-        height: 200px;
-        rotate: 180deg;
- */
+             width: 200px;
+             height: 200px;
+             rotate: 180deg;
+      */
       }
 
-      .pickCell div {
+      .pickCell div,
+      .displayOptions div {
         margin-right: 10px;
       }
 
@@ -99,6 +104,11 @@
         visualiser.clearGrid(table, false);
       }
 
+      function turnOnGridLabels() {
+        const table = getTable();
+        visualiser.turnOnGridLabels(table, false);
+      }
+
       function displayGrid() {
         const settingsName = getGridSettingsName();
         saveGridSettingsName(settingsName);
@@ -116,7 +126,12 @@
         gridTable.replaceChildren(visualiser.getTableRepresentation());
       }
 
-      function search(displayVisitedOrder, displayVisitedAnimation) {
+      function search(
+        displayVisitedOrder,
+        displayVisitedAnimation,
+        displayBacktrackedOrder = false,
+        displayBacktrackedAnimation = false
+      ) {
         const table = getTable();
 
         const coords = getSearchCoordinates();
@@ -127,6 +142,7 @@
         saveAnimationSpeed(animationSpeed);
 
         const searchType = getSearchStrategy();
+        saveSearchType(searchType);
 
         let result;
         if (searchType === "bfs")
@@ -145,7 +161,23 @@
         }
 
         if (displayVisitedAnimation) {
-          visualiser.animatePath(table, result.visited, animationSpeed);
+          visualiser.animateVisited(table, result.visited, animationSpeed);
+        }
+
+        if (displayBacktrackedOrder) {
+          visualiser.displayPathLabels(
+            table,
+            result.path.reverse(),
+            animationSpeed
+          );
+        }
+
+        if (displayBacktrackedAnimation) {
+          visualiser.animateBacktracked(
+            table,
+            result.path.reverse(),
+            animationSpeed
+          );
         }
       }
     </script>
@@ -162,13 +194,6 @@
     <input type="button" value="Display Grid" onclick="displayGrid()" />
 
     <div id="grid"></div>
-
-    <h2>Cell Labels</h2>
-
-    <select name="cell-label-setting" id="cell-label-setting-select">
-      <option value="on">ON</option>
-      <option value="off">OFF</option>
-    </select>
 
     <h2>Apply Search Strategy</h2>
 
@@ -197,23 +222,22 @@
     </div>
 
     <h3>Search Type</h3>
-    <div>
-      <input type="radio" id="bfs" name="searchType" value="bfs" checked />
-      <label for="bfs">BFS</label>
-    </div>
-
-    <div>
-      <input type="radio" id="dfs" name="searchType" value="dfs" />
-      <label for="dfs">DFS</label>
-    </div>
+    <select name="searchType" id="search-type-select">
+      <option value="bfs">bfs</option>
+      <option value="dfs">dfs</option>
+    </select>
 
     <h2>Animation speed</h2>
     <input type="text" id="animationSpeed" value="200" />
 
-    <div style="display: flex" id="displayOptions">
+    <div style="display: flex" class="displayOptions">
       <div>
         <input type="button" value="Clear Grid" onclick="clearGrid()" />
       </div>
+      <div>
+        <input type="button" value="Label Grid" onclick="turnOnGridLabels()" />
+      </div>
+
       <div>
         <input
           type="button"
@@ -226,6 +250,21 @@
           type="button"
           value="Display Search Animation"
           onclick="search(false, true)"
+        />
+      </div>
+
+      <div>
+        <input
+          type="button"
+          value="Display Path"
+          onclick="search(false, false, true, false)"
+        />
+      </div>
+      <div>
+        <input
+          type="button"
+          value="Display Path Animation"
+          onclick="search(false, false, false, true)"
         />
       </div>
     </div>

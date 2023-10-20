@@ -33,12 +33,12 @@ function presetFormFields() {
     }
   }
 
-  const cellLabelSetting = localStorage.getItem("cellLabelSetting");
-  if (cellLabelSetting) {
-    const select = document.querySelector("#cell-label-setting-select");
+  const searchType = localStorage.getItem("searchType");
+  if (searchType) {
+    const select = document.querySelector("#search-type-select");
 
     for (const option of select.options) {
-      if (option.value === cellLabelSetting) option.selected = true;
+      if (option.value === searchType) option.selected = true;
     }
   }
 }
