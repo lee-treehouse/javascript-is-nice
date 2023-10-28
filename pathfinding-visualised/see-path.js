@@ -7,11 +7,15 @@ class PathVisualiser {
   CSS_CLASS_VISITED = "visited";
   CSS_CLASS_BACKTRACKED = "backtracked";
   CSS_CLASS_QUEUED = "queued";
+  CSS_CLASS_FIRST = "first";
+  CSS_CLASS_LAST = "last";
 
   animationCSSClasses = [
     this.CSS_CLASS_VISITED,
     this.CSS_CLASS_BACKTRACKED,
     this.CSS_CLASS_QUEUED,
+    this.CSS_CLASS_FIRST,
+    this.CSS_CLASS_LAST,
   ];
 
   constructor(grid) {
@@ -158,6 +162,21 @@ class PathVisualiser {
       path,
       this.addAnimationToCell.bind(this),
       payload
+    );
+
+    // add extra classes to the first and the last fields
+    this.applyPathActionToTable(
+      table,
+      [path[0]],
+      this.addAnimationToCell.bind(this),
+      { ...payload, className: this.CSS_CLASS_FIRST }
+    );
+
+    this.applyPathActionToTable(
+      table,
+      [path[path.length - 1]],
+      this.addAnimationToCell.bind(this),
+      { ...payload, className: this.CSS_CLASS_LAST }
     );
   }
 

@@ -109,6 +109,31 @@ class JSNMazeSettings {
   }
 }
 
+class JSNWithoutMazeSettings {
+  // https: //www.youtube.com/watch?v=GC-nBgi9r0U
+  obstacles = [];
+  MAX_BOARD_X_COORD = 15;
+  MAX_BOARD_Y_COORD = 15;
+
+  getStrategyWeaknesses(strategy) {
+    return {};
+  }
+
+  constructor() {
+    this.generateObstacles();
+  }
+
+  generateObstacles() {
+    // outer borders
+    for (let i = 1; i <= 15; i++) {
+      this.obstacles.push([i, 15]);
+      this.obstacles.push([i, 1]);
+      this.obstacles.push([15, i]);
+      this.obstacles.push([1, i]);
+    }
+  }
+}
+
 class DefaultGridSettings {
   obstacles = [
     [3, 1],
@@ -141,12 +166,26 @@ class MediumGridSettings {
   }
 }
 
+class LargeGridSettings {
+  obstacles = [];
+  MAX_BOARD_X_COORD = 22;
+  MAX_BOARD_Y_COORD = 22;
+
+  getStrategyWeaknesses(strategy) {
+    return {};
+  }
+}
+
 const getGridSettings = (settingsName) => {
   switch (settingsName) {
     case "johnsongnow-maze":
       return new JSNMazeSettings();
+    case "johnsongnow-without-maze":
+      return new JSNWithoutMazeSettings();
     case "medium":
       return new MediumGridSettings();
+    case "large":
+      return new LargeGridSettings();
     default:
       return new DefaultGridSettings();
   }

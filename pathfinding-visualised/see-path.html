@@ -64,12 +64,25 @@
         background-color: lightsteelblue;
       }
 
+      td.visited.last,
+      td.visited.first {
+        background-color: steelblue;
+      }
+
       td.backtracked {
         background-color: lightpink;
+      }
+      td.backtracked.last,
+      td.backtracked.first {
+        background-color: pink;
       }
 
       td.visited.backtracked {
         background-color: lightsalmon;
+      }
+      td.visited.backtracked.first,
+      td.visited.backtracked.last {
+        background-color: salmon;
       }
 
       .box:hover {
@@ -188,7 +201,11 @@
     <select name="grid-strategy" id="grid-strategy-select">
       <option value="default">default</option>
       <option value="medium">medium</option>
+      <option value="large">large</option>
       <option value="johnsongnow-maze">John Song Now Maze</option>
+      <option value="johnsongnow-without-maze">
+        John Song Now Without Maze
+      </option>
     </select>
 
     <input type="button" value="Display Grid" onclick="displayGrid()" />

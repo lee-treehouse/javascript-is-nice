@@ -64,6 +64,12 @@ class Grid {
     return false;
   }
 
+  getDistance(startCoord, endCoord) {
+    const XDistance = Math.abs(endCoord[0] - startCoord[0]);
+    const YDistance = Math.abs(endCoord[1] - startCoord[1]);
+    return XDistance + YDistance;
+  }
+
   getVisitedAndPathDFS(startCoord, endCoord) {
     if (!startCoord || !endCoord) {
       console.log("missing coordinates");
