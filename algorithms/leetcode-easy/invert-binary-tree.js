@@ -5,6 +5,12 @@ function TreeNode(val, left, right) {
   this.right = right === undefined ? null : right;
 }
 
+function myMakeTree(array) {
+  for (let i = 0; i < array.length; i++) {
+    const value = array[i];
+  }
+}
+
 // https://stackoverflow.com/a/75473590
 function makeTree(arr) {
   if (!arr) return null; // empty tree
